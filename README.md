@@ -64,7 +64,7 @@ Ensure you have [Python 3.9+](https://www.python.org/downloads/) and [Ollama](ht
 
 **1. Clone the Repository:**
 ```bash
-git clone https://github.com/yourusername/shad0wsploit.git
+git clone https://github.com/Mohamed2007Sarhan/shad0wsploit.git
 cd shad0wsploit
 ```
 

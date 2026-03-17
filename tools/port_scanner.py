@@ -28,17 +28,21 @@ def scan_port(ip, port, timeout):
         return port, False, None
 
 def main():
-    parser = argparse.ArgumentParser(description="Scans a specific port or a range of common ports on a target IP.")
-    parser.add_argument("--ip", type=str, required=True, help="Target IP address")
+    parser = argparse.ArgumentParser(description="Scans a specific port or a range of common ports on a target IP or hostname (DNS resolved).")
+    parser.add_argument("--ip", type=str, required=True, help="Target IP address or hostname (DNS will be resolved automatically)")
     parser.add_argument("--ports", type=str, required=True, help="Comma-separated ports or 'common'")
     parser.add_argument("--timeout", type=float, default=1.0, help="Timeout per port in seconds")
     parser.add_argument("--detailed", action="store_true", help="Enable detailed scanning/banner grabbing")
     args = parser.parse_args()
 
     try:
-        # Validate IP
-        socket.inet_aton(args.ip)
-        
+        # Resolve hostname or IP to a usable IP address
+        # socket.gethostbyname works for both raw IPs and DNS names
+        try:
+            resolved_ip = socket.gethostbyname(args.ip)
+        except socket.gaierror as dns_err:
+            raise ValueError(f"Cannot resolve host '{args.ip}': {dns_err}")
+
         target_ports = []
         if args.ports.lower() == "common":
             target_ports = [21, 22, 23, 25, 53, 80, 110, 135, 139, 143, 443, 445, 993, 995, 1723, 3306, 3389, 5900, 8080]
@@ -65,7 +69,7 @@ def main():
         closed_ports = []
 
         with concurrent.futures.ThreadPoolExecutor(max_workers=50) as executor:
-            futures = {executor.submit(scan_port, args.ip, port, args.timeout): port for port in target_ports}
+            futures = {executor.submit(scan_port, resolved_ip, port, args.timeout): port for port in target_ports}
             for future in concurrent.futures.as_completed(futures):
                 port, is_open, banner = future.result()
                 if is_open:
@@ -78,7 +82,8 @@ def main():
 
         result = {
             "status": "success",
-            "target_ip": args.ip,
+            "target_input": args.ip,
+            "resolved_ip": resolved_ip,
             "scanned_count": len(target_ports),
             "open_ports": open_ports_info,
             "closed_ports": closed_ports
