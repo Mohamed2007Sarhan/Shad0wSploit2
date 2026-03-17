@@ -406,9 +406,9 @@ def call_llm(system_prompt, dynamic_context):
                 {"role": "system", "content": system_prompt},
                 {"role": "user",   "content": dynamic_context}
             ],
-            temperature=1,
-            top_p=0.95,
-            max_tokens=8192,
+            temperature=0.65,   # creativity + JSON discipline (0.0=robot, 1.0=chaos)
+            top_p=0.92,          # wide token pool without extreme randomness
+            max_tokens=6144,     # thinking chain (~3K) + full JSON/code response (~3K)
             extra_body={"chat_template_kwargs": {"thinking": True}},
             stream=True
         )
