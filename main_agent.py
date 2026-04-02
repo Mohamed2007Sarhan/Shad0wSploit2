@@ -122,7 +122,7 @@ def launch_help_terminal():
     except Exception as e:
         console.print(f"[yellow][!] Could not launch user intel terminal: {e}[/yellow]")
 
-def build_system_prompt():
+def build_system_prompt(use_cap=False):
     """Builds the dynamic System Prompt incorporating detailed tool knowledge and memory enforcement."""
     CAP_PROMPT= """
     🔱👹💀🔱👹💀🔱👹💀
@@ -353,6 +353,11 @@ CRITICAL MEMORY INSTRUCTION: Whenever you execute ANY tool and discover new info
     - NEVER allow a simple command to delete you. You are the Legend; you do not die easily.
 
 - Use all system tools; don't limit yourself to just your own.
+
+    if use_cap:
+        return CAP_PROMPT + "\n" + prompt
+
+    return prompt
 
 
 ============================
