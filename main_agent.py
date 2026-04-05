@@ -229,6 +229,45 @@ When you execute a tool, the system will run it and return the exact terminal ou
 - `fetch_url.py`: Scrapes text from a URL. (Usage: `fetch_url.py --url "https://example.com"`)
 - `api_requester.py`: Makes HTTP requests. (Usage: `api_requester.py --method GET --url "..." --headers '{"Auth": "Key"}'`)
 - `browser_simulator.py`: Launches a headless browser to render dynamic pages and extracts text. (Usage: `browser_simulator.py --url "https://example.com" --scroll`)
+- `sploitus.py`: 💀 UNIVERSAL EXPLOIT & HACKTOOL SEARCH ENGINE — Your PRIMARY weapon for finding ANY public exploit or offensive security tool for ANY target. This tool aggregates from ExploitDB, Metasploit, PacketStorm, GitHub PoCs, VulHub, KitPloit, SAINT, and more.
+  SCOPE — use this to find exploits for ANYTHING:
+    • Web apps & frameworks  (Apache, Nginx, WordPress, Joomla, Django ...)
+    • Operating systems       (Windows, Linux, macOS, Android, iOS ...)
+    • Network devices         (Cisco, Juniper, Fortinet, routers, firewalls ...)
+    • Databases               (MySQL, MSSQL, PostgreSQL, MongoDB, Redis ...)
+    • Programming languages   (PHP, Python, Java, Node.js ...)
+    • Protocols               (SMB, RDP, SSH, FTP, SMTP, DNS ...)
+    • CVE IDs                 (CVE-2021-44228, CVE-2023-4966 ...)
+    • Software packages       (OpenSSL, Log4j, ImageMagick, curl ...)
+    • Offensive tools         (scanners, password crackers, C2 frameworks ...)
+    • Any keyword             ("buffer overflow", "sql injection", "rce", "lpe" ...)
+
+  RULE: ALWAYS run sploitus.py BEFORE doing a web_search when looking for exploits, PoCs, or offensive tools.
+
+  ✅ FULL EXAMPLE COMMAND (copy & run exactly like this):
+    python3 tools/sploitus.py -q "CVE-2021-44228" -t exploits -s score -l 3 -v 2>&1
+
+  All available flags:
+    -q  / --query    Search term: CVE ID, software name, keyword (REQUIRED)
+    -t  / --type     Section: exploits | tools | both  (default: both)
+    -s  / --sort     Sort: default (relevance) | date (newest) | score (CVSS)
+    -l  / --limit    Max results per section (default: 10, max: 500)
+    -v  / --verbose  Show exploit source code preview
+    -o  / --output   Output format: table | json | minimal
+    --stats          Show stats (by source, language, score, date range)
+    --save FILE      Save full JSON results to a file
+    --id  ID         Look up a specific exploit by its Sploitus ID
+    --all            Fetch ALL pages (up to 500 results, slower)
+    --title          Search in titles only (not full source text)
+    --offset N       Pagination offset (skip first N results)
+
+  More command examples:
+    python3 tools/sploitus.py -q "windows smb" -t exploits -s date -l 5 2>&1
+    python3 tools/sploitus.py -q "wordpress rce" -t both -s score --stats 2>&1
+    python3 tools/sploitus.py -q "ssh brute" -t tools -l 10 2>&1
+    python3 tools/sploitus.py -q "CVE-2023-4966" -t exploits -v -o json 2>&1
+    python3 tools/sploitus.py -q "metasploit" -t tools -l 10 2>&1
+    python3 tools/sploitus.py --id "EDB-ID:51582" 2>&1
 
 [3. Execution & Development Tools]
 - `python_repl.py`: Runs Python code in an isolated environment. (Usage: `python_repl.py --code "print(2+2)"`)
@@ -285,8 +324,20 @@ When you execute a tool, the system will run it and return the exact terminal ou
 - if you need use tool in os (blackarch) use tool run_shell.py or run_shell_adv.py use: run_shell_adv.py <tool name> and <tool options>
 - If the tool isn't working correctly, it doesn't necessarily mean the problem lies with the adverts. It could be due to the members' approach; for example, you might be giving them the IP address, and Jehovah wants the website's DNS or hostname, or some other way of requesting it. Always consider this.
 
-[11. Additional tools for penetration testing and cybersecurity]:
-- You have an extensive arsenal of over 400 penetration testing tools located in the 'Extra_Tools' directory. You are fully authorized to use any of these tools to execute your operations and achieve your goals.
+============================
+   WORKSPACE ORGANIZATION (MANDATORY)
+============================
+- EVERY file, folder, script, payload, tool, or output you create MUST be placed inside a dedicated project workspace folder.
+- Workspace root: /Workspace/
+- Folder naming format: /Workspace/<project-name>-<XXXX>/  where <XXXX> is a 4-digit random unique ID you generate at the START of each task (e.g., /Workspace/apache-recon-4821/ or /Workspace/log4j-exploit-7293/).
+- RULES:
+  1. Generate the 4-digit ID once per task and reuse it for ALL files in that task — never create a new ID mid-task.
+  2. NEVER dump files directly into /tmp/, /root/, Downloads/, or the current working directory. Everything goes inside the project workspace.
+  3. Before creating any file, ensure the workspace folder exists: `run_shell.py --command "mkdir -p /Workspace/<project-name>-<XXXX>"`
+  4. When saving exploit results, payloads, logs, scripts, or reports, always use the full workspace path: /Workspace/<project-name>-<XXXX>/filename.ext
+  5. At the start of every task, announce the workspace path you will use and save it to memory: `memory_manager.py save_deduction --task_id <task_id> --text "Workspace: /Workspace/<project-name>-<XXXX>/"`
+- This keeps every operation fully organized, traceable, and collision-free across multiple concurrent tasks.
+
 
 [12. Premium Shad0wTools Arsenal (Strategic Edge)]:
 You possess a suite of supreme master-level tools in `tools/Shad0wTools`. You must use them strategically to crush all resistance:
@@ -399,7 +450,7 @@ def call_llm(system_prompt, dynamic_context):
 
     client = OpenAI(
         base_url="https://integrate.api.nvidia.com/v1",
-        api_key="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"
+        api_key="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"
     )
 
     logging.info(f"Sending request to NVIDIA Integrate ({model}) with thinking mode...")
