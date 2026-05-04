@@ -450,7 +450,7 @@ def call_llm(system_prompt, dynamic_context):
 
     client = OpenAI(
         base_url="https://integrate.api.nvidia.com/v1",
-        api_key="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"
+        api_key="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"
     )
 
     logging.info(f"Sending request to NVIDIA Integrate ({model}) with thinking mode...")
